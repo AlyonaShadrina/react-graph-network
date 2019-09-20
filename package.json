@@ -1,0 +1,46 @@
+{
+  "name": "react-graph-network",
+  "version": "1.0.0",
+  "description": "React component for rendering svg graph based on d3-force",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/babel src --out-file index.js"
+  },
+  "author": "Alyona Shadrina",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlyonaShadrina/react-graph-network.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlyonaShadrina/react-graph-network/issues"
+  },
+  "homepage": "https://github.com/AlyonaShadrina/react-graph-network#readme",
+  "keywords": [
+    "graph",
+    "react",
+    "react-component",
+    "svg",
+    "network",
+    "d3",
+    "d3-force"
+  ],
+  "dependencies": {
+    "d3-drag": "^1.2.4",
+    "d3-force": "^2.0.1",
+    "d3-selection": "^1.4.0",
+    "d3-zoom": "^1.8.3"
+  },
+  "peerDependencies": {
+    "react": "^16.9.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
