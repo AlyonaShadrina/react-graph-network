@@ -1,4 +1,4 @@
-React component for rendering svg graph based on [d3-force](https://github.com/d3/d3-force).
+React component for rendering svg graph based on [d3-force](https://github.com/d3/d3-force) with zoom, node dragging and other preferences.
 
 ## Usage
 
@@ -44,6 +44,8 @@ export default App;
 ```
 
 ### Advanced case
+
+Try different preferences on [demo page](https://alyonashadrina.github.io/react-graph-network-demo/build/) with Leo Tolstoy family tree data.
 
 ## Props
 
