@@ -43,6 +43,13 @@ export const addDrag = (node, simulation, enableDrag, pullIn) => {
             .on("drag", dragged)
             .on("end", pullIn ? () => dragended(simulation) : null),
         );
+    } else {
+        node.call(drag()
+            .subject(() => dragsubject(simulation))
+            .on("start", null)
+            .on("drag", null)
+            .on("end", null),
+        );
     }
     return node;
 };
