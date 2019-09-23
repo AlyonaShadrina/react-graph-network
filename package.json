@@ -1,6 +1,6 @@
 {
   "name": "react-graph-network",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "React component for rendering svg graph based on d3-force",
   "main": "index.js",
   "scripts": {
