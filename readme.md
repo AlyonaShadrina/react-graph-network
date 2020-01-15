@@ -1,4 +1,4 @@
-React component for rendering svg graph based on [d3-force](https://github.com/d3/d3-force).
+React component for rendering svg graph based on [d3-force](https://github.com/d3/d3-force) with zoom, node dragging and other preferences.
 
 ## Usage
 
@@ -45,6 +45,8 @@ export default App;
 
 ### Advanced case
 
+Try different preferences on [demo page](https://alyonashadrina.github.io/react-graph-network-demo/build/index.html) with Leo Tolstoy family tree data.
+
 ## Props
 
 | Name | Type | Default | Description | 
@@ -52,11 +54,14 @@ export default App;
 | `data`           | `object` |         | Must have `links` and `nodes` props. Each node must have `id` prop. Each link must have `source` and `target` props with `id` as values. |
 | `nodeDistance`   | `number` | `100`   | The more value is, the more is distance between nodes. |
 | `NodeComponent`  | `node`   |         | Has to be [svg element](https://developer.mozilla.org/docs/Web/SVG/Element). Will receive concrete `node` prop from your `data`. |
-| `LineComponent`  | `node`   |         | Has to be `<line />` tag. Will receive concrete `link` prop from your `data`. You need to apply all rest props on your `<line>` tag. |
+| `LineComponent`  | `node`   |         | Has to be `<line />` tag. Will receive concrete `link` prop from your `data` as id and as object it point to. |
 | `enableDrag`     | `bool`   | `false` | Enable nodes dragging. |
 | `pullIn`         | `bool`   | `false` | When `enableDrag`, stretch nodes back. |
 | `zoomDepth`      | `number` | `0`     | Zooming on scroll wheel. `1` will just enable dragging graph area. |
 | `hoverOpacity`   | `number` | `1`     | When hover on node all other nodes will have this value as opacity. Needs to be from 0 to 1. |
+
+#### `LineComponent`
+You need to apply all rest props on your `<line>` tag. If you have specific logic in your Line component be sure to handle link prop both as id and object. See [details and example on demo project](https://github.com/AlyonaShadrina/react-graph-network-demo#linecomponent-code).
 
 ### `data` example
 

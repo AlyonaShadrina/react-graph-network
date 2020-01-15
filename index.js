@@ -3,60 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.tick = exports.dragended = exports.dragged = exports.dragstarted = exports.dragsubject = void 0;
-
-var _d3Selection = require("d3-selection");
-
-var dragsubject = function dragsubject(simulation) {
-  return simulation.find(_d3Selection.event.x, _d3Selection.event.y);
-};
-
-exports.dragsubject = dragsubject;
-
-var dragstarted = function dragstarted(simulation) {
-  if (!_d3Selection.event.active) simulation.alphaTarget(0.3).restart();
-  _d3Selection.event.subject.fx = _d3Selection.event.subject.x;
-  _d3Selection.event.subject.fy = _d3Selection.event.subject.y;
-};
-
-exports.dragstarted = dragstarted;
-
-var dragged = function dragged() {
-  _d3Selection.event.subject.fx = _d3Selection.event.x;
-  _d3Selection.event.subject.fy = _d3Selection.event.y;
-};
-
-exports.dragged = dragged;
-
-var dragended = function dragended(simulation) {
-  if (!_d3Selection.event.active) simulation.alphaTarget(0);
-  _d3Selection.event.subject.fx = null;
-  _d3Selection.event.subject.fy = null;
-};
-
-exports.dragended = dragended;
-
-var tick = function tick(node, link) {
-  link.attr("x1", function (d) {
-    return d.source.x;
-  }).attr("y1", function (d) {
-    return d.source.y;
-  }).attr("x2", function (d) {
-    return d.target.x;
-  }).attr("y2", function (d) {
-    return d.target.y;
-  });
-  node.style('transform', function (d) {
-    return "translate(".concat(d.x, "px, ").concat(d.y, "px)");
-  });
-};
-
-exports.tick = tick;
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports["default"] = void 0;
 
 var _d3Selection = require("d3-selection");
@@ -97,6 +43,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
+// TODO: make component independent of restProps
 // TODO: handle error when line is not <line>
 // TODO: add centering node on click
 // TODO: fix function with hook
@@ -295,73 +242,3 @@ Graph.defaultProps = {
 };
 var _default = Graph;
 exports["default"] = _default;
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.addDrag = exports.addHoverOpacity = exports.addZoom = void 0;
-
-var _d3Drag = require("d3-drag");
-
-var _d3Selection = require("d3-selection");
-
-var _d3Zoom = require("d3-zoom");
-
-var _events = require("./events");
-
-var addZoom = function addZoom(svg, zoomDepth) {
-  if (zoomDepth) {
-    var svgHeight = svg._groups[0][0].clientHeight;
-    var svgWidth = svg._groups[0][0].clientWidth;
-
-    var zoomed = function zoomed() {
-      svg.selectAll("._graphZoom").attr("transform", _d3Selection.event.transform);
-    };
-
-    svg.call((0, _d3Zoom.zoom)().extent([[0, 0], [svgWidth, svgHeight]]).scaleExtent([1, zoomDepth]).on("zoom", zoomed));
-  }
-
-  return svg;
-};
-
-exports.addZoom = addZoom;
-
-var addHoverOpacity = function addHoverOpacity(node, link, hoverOpacity) {
-  node.on('mouseover', function (d) {
-    node.style('opacity', hoverOpacity);
-    (0, _d3Selection.select)(this).style('opacity', '1');
-    link.style('opacity', function (link_d) {
-      return link_d.source.id === d.id || link_d.target.id === d.id ? '1' : hoverOpacity;
-    });
-  }).on('mouseout', function (d) {
-    node.style('opacity', "1");
-    link.style('opacity', '1');
-  });
-  return {
-    node: node,
-    link: link
-  };
-};
-
-exports.addHoverOpacity = addHoverOpacity;
-
-var addDrag = function addDrag(node, simulation, enableDrag, pullIn) {
-  if (enableDrag) {
-    node.call((0, _d3Drag.drag)().subject(function () {
-      return (0, _events.dragsubject)(simulation);
-    }).on("start", function () {
-      return (0, _events.dragstarted)(simulation);
-    }).on("drag", _events.dragged).on("end", pullIn ? function () {
-      return (0, _events.dragended)(simulation);
-    } : null));
-  } else {
-    node.call((0, _d3Drag.drag)().subject(function () {
-      return (0, _events.dragsubject)(simulation);
-    }).on("start", null).on("drag", null).on("end", null));
-  }
-
-  return node;
-};
-
-exports.addDrag = addDrag;

@@ -5,6 +5,7 @@ import React, { useEffect } from 'react';
 import { tick } from './events';
 import { addDrag, addHoverOpacity, addZoom } from './interactions';
 
+// TODO: make component independent of restProps
 // TODO: handle error when line is not <line>
 // TODO: add centering node on click
 // TODO: fix function with hook
