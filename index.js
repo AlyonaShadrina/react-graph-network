@@ -355,6 +355,10 @@ var addDrag = function addDrag(node, simulation, enableDrag, pullIn) {
     }).on("drag", _events.dragged).on("end", pullIn ? function () {
       return (0, _events.dragended)(simulation);
     } : null));
+  } else {
+    node.call((0, _d3Drag.drag)().subject(function () {
+      return (0, _events.dragsubject)(simulation);
+    }).on("start", null).on("drag", null).on("end", null));
   }
 
   return node;
