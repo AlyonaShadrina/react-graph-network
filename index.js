@@ -29,7 +29,12 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // TODO: handle error when line is not <line>
 // TODO: add centering node on click
 // TODO: split to separate useEffects and useState
-// TODO: fix zoomDepth - not working at all
+// if you'll try do develop package locally with 'npm link'
+// probably you will get error 'Invalid hook call.'
+// see https://github.com/facebook/react/issues/15315#issuecomment-479802153
+// so better fork and/or use branch name in package.json dependencies like so:
+// "react-graph-network": "github:AlyonaShadrina/react-graph-network#<branch>"
+// dont't forget to `rm -rf ./node_modules/react-graph-network`, maybe clear your package.json and `npm i`
 var Graph = function Graph(_ref) {
   var data = _ref.data,
       nodeDistance = _ref.nodeDistance,
@@ -42,6 +47,10 @@ var Graph = function Graph(_ref) {
       restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableDrag", "hoverOpacity"]);
 
   (0, _react.useEffect)(function () {
+    if (!data) {
+      return null;
+    }
+
     var svg = (0, _d3Selection.select)("#GraphTree_container");
     var link = svg.selectAll("._graphLine").data(data.links);
     var node = svg.selectAll("._graphNode").data(data.nodes);
@@ -61,6 +70,11 @@ var Graph = function Graph(_ref) {
     (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
     (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
   }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity]);
+
+  if (!data) {
+    return null;
+  }
+
   return _react["default"].createElement("svg", _extends({
     id: "GraphTree_container",
     width: "100%",

@@ -9,7 +9,6 @@ import { addDrag, addHoverOpacity, addZoom } from './interactions';
 // TODO: handle error when line is not <line>
 // TODO: add centering node on click
 // TODO: split to separate useEffects and useState
-// TODO: fix zoomDepth - not working at all
 
 // if you'll try do develop package locally with 'npm link'
 // probably you will get error 'Invalid hook call.'
