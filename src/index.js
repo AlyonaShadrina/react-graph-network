@@ -24,31 +24,31 @@ const Graph = ({
     // const [count, setCount] = useState(0);
 //
     useEffect(() => {
-//
-//         const svg = select("#GraphTree_container");
-//         const link = svg.selectAll("._graphLine").data(data.links);
-//         const node = svg.selectAll("._graphNode").data(data.nodes);
-//
-//         const simulation = forceSimulation(data.nodes)
-//             .force("link", forceLink()                                 // This force provides links between nodes
-//                 .id(function(d) { return d.id; })                      // This provide the id of a node
-//                 .links(data.links)                                     // and this the list of links
-//             )
-//             .force("charge", forceManyBody().strength(-1 * nodeDistance))          // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-//             .force("center", forceCenter(
-//                 svg._groups[0][0].parentElement.clientWidth / 2,
-//                 svg._groups[0][0].parentElement.clientHeight / 2
-//             ))                                                         // This force attracts nodes to the center of the svg area
-//             .on("tick", () => tick(node, link));                       // https://github.com/d3/d3-force#simulation_tick
-//
-//         // add interactions
-//         addZoom(svg, zoomDepth);
-//         addHoverOpacity(node, link, hoverOpacity);
-//         addDrag(node, simulation, enableDrag, pullIn);
-//
+
+        const svg = select("#GraphTree_container");
+        const link = svg.selectAll("._graphLine").data(data.links);
+        const node = svg.selectAll("._graphNode").data(data.nodes);
+
+        const simulation = forceSimulation(data.nodes)
+            .force("link", forceLink()                                 // This force provides links between nodes
+                .id(function(d) { return d.id; })                      // This provide the id of a node
+                .links(data.links)                                     // and this the list of links
+            )
+            .force("charge", forceManyBody().strength(-1 * nodeDistance))          // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+            .force("center", forceCenter(
+                svg._groups[0][0].parentElement.clientWidth / 2,
+                svg._groups[0][0].parentElement.clientHeight / 2
+            ))                                                         // This force attracts nodes to the center of the svg area
+            .on("tick", () => tick(node, link));                       // https://github.com/d3/d3-force#simulation_tick
+
+        // add interactions
+        addZoom(svg, zoomDepth);
+        addHoverOpacity(node, link, hoverOpacity);
+        addDrag(node, simulation, enableDrag, pullIn);
+
         console.log('bla');
-    }, []);
-    // }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity,]);
+    // }, []);
+    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity,]);
 //
 //
     return (
@@ -58,37 +58,37 @@ const Graph = ({
             height="100%"
             {...restProps}
         >
-{/*//             <g className="_graphZoom">*/}
-{/*//                 {*/}
-{/*//                     data.links.map((link, i) => {*/}
-{/*//                         return LineComponent*/}
-{/*//                             ? <LineComponent link={link} key={i} className="_graphLine"/>*/}
-{/*//                             : <line stroke="grey" key={i} className="_graphLine" />*/}
-{/*//                     })*/}
-{/*//                 }*/}
-{/*//                 {*/}
-{/*//                     data.nodes.map((node, i) => {*/}
-{/*//                         return (*/}
-{/*//                             <g key={i} className="_graphNode">*/}
-{/*//                                 {*/}
-{/*//                                     NodeComponent*/}
-{/*//                                         ? <NodeComponent node={node}/>*/}
-{/*//                                         : <circle fill="black" r={10} />*/}
-{/*//                                 }*/}
-{/*//                             </g>*/}
-{/*//                         )*/}
-{/*//                     })*/}
-{/*//                 }*/}
-{/*//             </g>*/}
+             <g className="_graphZoom">
+                 {
+                     data.links.map((link, i) => {
+                         return LineComponent
+                             ? <LineComponent link={link} key={i} className="_graphLine"/>
+                             : <line stroke="grey" key={i} className="_graphLine" />
+                     })
+                 }
+                 {
+                     data.nodes.map((node, i) => {
+                         return (
+                             <g key={i} className="_graphNode">
+                                 {
+                                     NodeComponent
+                                         ? <NodeComponent node={node}/>
+                                         : <circle fill="black" r={10} />
+                                 }
+                             </g>
+                         )
+                     })
+                 }
+             </g>
         </svg>
     )
 };
 
-// Graph.defaultProps = {
-//     nodeDistance: 100,
-//     zoomDepth: 0,
-//     hoverOpacity: 1,
-// };
+Graph.defaultProps = {
+    nodeDistance: 100,
+    zoomDepth: 0,
+    hoverOpacity: 1,
+};
 
 export default Graph;
 
