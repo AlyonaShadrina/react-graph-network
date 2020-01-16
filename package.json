@@ -33,14 +33,13 @@
     "d3-zoom": "^1.8.3"
   },
   "peerDependencies": {
-    "react": "^16.9.0"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.0",
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
-    "@babel/preset-react": "^7.0.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "@babel/preset-react": "^7.0.0"
   }
 }
