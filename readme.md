@@ -45,7 +45,7 @@ export default App;
 
 ### Advanced case
 
-Try different preferences on [demo page](https://alyonashadrina.github.io/react-graph-network-demo/build/index.html) with Leo Tolstoy family tree data.
+Try different preferences on [demo page](https://alyonashadrina.github.io/react-graph-network-demo/) with Leo Tolstoy family tree data.
 
 ## Props
 
