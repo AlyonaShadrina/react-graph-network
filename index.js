@@ -43,45 +43,62 @@ var Graph = function Graph(_ref) {
   // const [count, setCount] = useState(0);
   //
   (0, _react.useEffect)(function () {
-    //
-    //         const svg = select("#GraphTree_container");
-    //         const link = svg.selectAll("._graphLine").data(data.links);
-    //         const node = svg.selectAll("._graphNode").data(data.nodes);
-    //
-    //         const simulation = forceSimulation(data.nodes)
-    //             .force("link", forceLink()                                 // This force provides links between nodes
-    //                 .id(function(d) { return d.id; })                      // This provide the id of a node
-    //                 .links(data.links)                                     // and this the list of links
-    //             )
-    //             .force("charge", forceManyBody().strength(-1 * nodeDistance))          // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-    //             .force("center", forceCenter(
-    //                 svg._groups[0][0].parentElement.clientWidth / 2,
-    //                 svg._groups[0][0].parentElement.clientHeight / 2
-    //             ))                                                         // This force attracts nodes to the center of the svg area
-    //             .on("tick", () => tick(node, link));                       // https://github.com/d3/d3-force#simulation_tick
-    //
-    //         // add interactions
-    //         addZoom(svg, zoomDepth);
-    //         addHoverOpacity(node, link, hoverOpacity);
-    //         addDrag(node, simulation, enableDrag, pullIn);
-    //
-    console.log('bla');
-  }, []); // }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity,]);
-  //
+    var svg = (0, _d3Selection.select)("#GraphTree_container");
+    var link = svg.selectAll("._graphLine").data(data.links);
+    var node = svg.selectAll("._graphNode").data(data.nodes);
+    var simulation = (0, _d3Force.forceSimulation)(data.nodes).force("link", (0, _d3Force.forceLink)() // This force provides links between nodes
+    .id(function (d) {
+      return d.id;
+    }) // This provide the id of a node
+    .links(data.links) // and this the list of links
+    ).force("charge", (0, _d3Force.forceManyBody)().strength(-1 * nodeDistance)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
+    .force("center", (0, _d3Force.forceCenter)(svg._groups[0][0].parentElement.clientWidth / 2, svg._groups[0][0].parentElement.clientHeight / 2)) // This force attracts nodes to the center of the svg area
+    .on("tick", function () {
+      return (0, _events.tick)(node, link);
+    }); // https://github.com/d3/d3-force#simulation_tick
+    // add interactions
+
+    (0, _interactions.addZoom)(svg, zoomDepth);
+    (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
+    (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
+    console.log('bla'); // }, []);
+  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity]); //
   //
 
   return _react["default"].createElement("svg", _extends({
     id: "GraphTree_container",
     width: "100%",
     height: "100%"
-  }, restProps));
-}; // Graph.defaultProps = {
-//     nodeDistance: 100,
-//     zoomDepth: 0,
-//     hoverOpacity: 1,
-// };
+  }, restProps), _react["default"].createElement("g", {
+    className: "_graphZoom"
+  }, data.links.map(function (link, i) {
+    return LineComponent ? _react["default"].createElement(LineComponent, {
+      link: link,
+      key: i,
+      className: "_graphLine"
+    }) : _react["default"].createElement("line", {
+      stroke: "grey",
+      key: i,
+      className: "_graphLine"
+    });
+  }), data.nodes.map(function (node, i) {
+    return _react["default"].createElement("g", {
+      key: i,
+      className: "_graphNode"
+    }, NodeComponent ? _react["default"].createElement(NodeComponent, {
+      node: node
+    }) : _react["default"].createElement("circle", {
+      fill: "black",
+      r: 10
+    }));
+  })));
+};
 
-
+Graph.defaultProps = {
+  nodeDistance: 100,
+  zoomDepth: 0,
+  hoverOpacity: 1
+};
 var _default = Graph; // class Graph extends React.Component {
 //     constructor(props) {
 //         super(props);
