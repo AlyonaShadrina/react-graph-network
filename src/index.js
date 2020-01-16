@@ -17,7 +17,7 @@ import { addDrag, addHoverOpacity, addZoom } from './interactions';
 
 // so better fork and/or use branch name in package.json dependencies like so:
 // "react-graph-network": "github:AlyonaShadrina/react-graph-network#<branch>"
-// dont't forget to `rm -rf ./node_modules/react-graph-network && npm i`
+// dont't forget to `rm -rf ./node_modules/react-graph-network`, maybe clear your package.json and `npm i`
 
 const Graph = ({
     data,
