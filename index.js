@@ -44,14 +44,16 @@ var Graph = function Graph(_ref) {
       zoomDepth = _ref.zoomDepth,
       enableDrag = _ref.enableDrag,
       hoverOpacity = _ref.hoverOpacity,
-      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableDrag", "hoverOpacity"]);
+      _ref$id = _ref.id,
+      id = _ref$id === void 0 ? 'GraphTree_container' : _ref$id,
+      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableDrag", "hoverOpacity", "id"]);
 
   (0, _react.useEffect)(function () {
     if (!data) {
       return null;
     }
 
-    var svg = (0, _d3Selection.select)("#GraphTree_container");
+    var svg = (0, _d3Selection.select)("#".concat(id));
     var link = svg.selectAll("._graphLine").data(data.links);
     var node = svg.selectAll("._graphNode").data(data.nodes);
     var simulation = (0, _d3Force.forceSimulation)(data.nodes).force("link", (0, _d3Force.forceLink)() // This force provides links between nodes
@@ -76,7 +78,7 @@ var Graph = function Graph(_ref) {
   }
 
   return _react["default"].createElement("svg", _extends({
-    id: "GraphTree_container",
+    id: id,
     width: "100%",
     height: "100%"
   }, restProps), _react["default"].createElement("g", {

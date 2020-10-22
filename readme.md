@@ -36,7 +36,7 @@ const data = {
 
 const App = () => (
   <div style={{ height: '100vh' }}>
-    <Graph data={data} />
+    <Graph data={data} id="graph" />
   </div>
 );
 
@@ -52,6 +52,7 @@ Try different preferences on [demo page](https://alyonashadrina.github.io/react-
 | Name | Type | Default | Description | 
 |---|---|---|---|
 | `data`           | `object` |         | Must have `links` and `nodes` props. Each node must have `id` prop. Each link must have `source` and `target` props with `id` as values. |
+| `id`   | `string` | `GraphTree_container`   | Provide `id` if you need more than 1 graph. |
 | `nodeDistance`   | `number` | `100`   | The more value is, the more is distance between nodes. |
 | `NodeComponent`  | `node`   |         | Has to be [svg element](https://developer.mozilla.org/docs/Web/SVG/Element). Will receive concrete `node` prop from your `data`. |
 | `LineComponent`  | `node`   |         | Has to be `<line />` tag. Will receive concrete `link` prop from your `data` as id and as object it point to. |
