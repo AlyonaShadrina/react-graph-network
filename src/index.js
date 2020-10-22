@@ -27,6 +27,7 @@ const Graph = ({
     zoomDepth,
     enableDrag,
     hoverOpacity,
+    id = 'GraphTree_container',
     ...restProps
 }) => {
     useEffect(() => {
@@ -35,7 +36,7 @@ const Graph = ({
             return null
         }
 
-        const svg = select("#GraphTree_container");
+        const svg = select(`#${id}`);
         const link = svg.selectAll("._graphLine").data(data.links);
         const node = svg.selectAll("._graphNode").data(data.nodes);
 
@@ -64,7 +65,7 @@ const Graph = ({
 
     return (
         <svg
-            id="GraphTree_container"
+            id={id}
             width="100%"
             height="100%"
             {...restProps}
