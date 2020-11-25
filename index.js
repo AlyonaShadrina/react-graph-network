@@ -42,11 +42,12 @@ var Graph = function Graph(_ref) {
       LineComponent = _ref.LineComponent,
       pullIn = _ref.pullIn,
       zoomDepth = _ref.zoomDepth,
+      enableZoomOut = _ref.enableZoomOut,
       enableDrag = _ref.enableDrag,
       hoverOpacity = _ref.hoverOpacity,
       _ref$id = _ref.id,
       id = _ref$id === void 0 ? 'GraphTree_container' : _ref$id,
-      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableDrag", "hoverOpacity", "id"]);
+      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "id"]);
 
   (0, _react.useEffect)(function () {
     if (!data) {
@@ -68,10 +69,10 @@ var Graph = function Graph(_ref) {
     }); // https://github.com/d3/d3-force#simulation_tick
     // add interactions
 
-    (0, _interactions.addZoom)(svg, zoomDepth);
+    (0, _interactions.addZoom)(svg, zoomDepth, enableZoomOut);
     (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
     (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
-  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity]);
+  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity]);
 
   if (!data) {
     return null;
@@ -109,6 +110,7 @@ var Graph = function Graph(_ref) {
 Graph.defaultProps = {
   nodeDistance: 100,
   zoomDepth: 0,
+  enableZoomOut: false,
   hoverOpacity: 1
 };
 var _default = Graph;
