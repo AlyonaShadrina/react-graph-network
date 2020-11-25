@@ -15,7 +15,7 @@ export const addZoom = (svg, zoomDepth) => {
 
         svg.call(zoom()
             .extent([[0, 0], [svgWidth, svgHeight]])
-            .scaleExtent([1, zoomDepth])
+            .scaleExtent([-Math.abs(zoomDepth), zoomDepth])
             .on("zoom", zoomed));
     }
     return svg;
