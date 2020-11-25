@@ -25,6 +25,7 @@ const Graph = ({
     LineComponent,
     pullIn,
     zoomDepth,
+    enableZoomOut,
     enableDrag,
     hoverOpacity,
     id = 'GraphTree_container',
@@ -53,11 +54,11 @@ const Graph = ({
             .on("tick", () => tick(node, link));                       // https://github.com/d3/d3-force#simulation_tick
 
         // add interactions
-        addZoom(svg, zoomDepth);
+        addZoom(svg, zoomDepth, enableZoomOut);
         addHoverOpacity(node, link, hoverOpacity);
         addDrag(node, simulation, enableDrag, pullIn);
 
-    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity]);
+    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity]);
 
     if (!data) {
         return null
@@ -99,6 +100,7 @@ const Graph = ({
 Graph.defaultProps = {
     nodeDistance: 100,
     zoomDepth: 0,
+    enableZoomOut: false,
     hoverOpacity: 1,
 };
 
