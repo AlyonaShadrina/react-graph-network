@@ -37,6 +37,15 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // so better fork and/or use branch name in package.json dependencies like so:
 // "react-graph-network": "github:AlyonaShadrina/react-graph-network#<branch>"
 // dont't forget to `rm -rf ./node_modules/react-graph-network`, maybe clear your package.json and `npm i`
+var loaderStyle = {
+  width: "100%",
+  height: "100%",
+  background: "white",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
 var Graph = function Graph(_ref) {
   var data = _ref.data,
       nodeDistance = _ref.nodeDistance,
@@ -48,9 +57,10 @@ var Graph = function Graph(_ref) {
       enableDrag = _ref.enableDrag,
       hoverOpacity = _ref.hoverOpacity,
       animateNodes = _ref.animateNodes,
+      LoaderComponent = _ref.LoaderComponent,
       _ref$id = _ref.id,
       id = _ref$id === void 0 ? 'GraphTree_container' : _ref$id,
-      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "animateNodes", "id"]);
+      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "animateNodes", "LoaderComponent", "id"]);
 
   (0, _react.useEffect)(function () {
     if (!data) {
@@ -60,6 +70,8 @@ var Graph = function Graph(_ref) {
     var svg = (0, _d3Selection.select)("#".concat(id));
     var link = svg.selectAll("._graphLine").data(data.links);
     var node = svg.selectAll("._graphNode").data(data.nodes);
+    (0, _d3Selection.select)("._loaderContainer").style("display", undefined);
+    (0, _d3Selection.select)("._graphZoom").attr("transform", undefined);
     var simulation = (0, _d3Force.forceSimulation)(data.nodes).force("link", (0, _d3Force.forceLink)() // This force provides links between nodes
     .id(function (d) {
       return d.id;
@@ -75,12 +87,13 @@ var Graph = function Graph(_ref) {
         d.fx = d.x;
         d.fy = d.y;
       });
+      (0, _d3Selection.select)("._loaderContainer").style("display", "none");
     }); // add interactions
 
     (0, _interactions.addZoom)(svg, zoomDepth, enableZoomOut);
     (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
     (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
-  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes]);
+  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, LoaderComponent]);
 
   if (!data) {
     return null;
@@ -112,7 +125,13 @@ var Graph = function Graph(_ref) {
       fill: "black",
       r: 10
     }));
-  })));
+  })), !animateNodes && /*#__PURE__*/_react.default.createElement("foreignObject", {
+    className: "_loaderContainer",
+    width: "100%",
+    height: "100%"
+  }, LoaderComponent ? /*#__PURE__*/_react.default.createElement(LoaderComponent, null) : /*#__PURE__*/_react.default.createElement("div", {
+    style: loaderStyle
+  }, "Plotting...")));
 };
 
 Graph.defaultProps = {
