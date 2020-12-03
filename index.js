@@ -1,9 +1,11 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _d3Selection = require("d3-selection");
 
@@ -17,7 +19,7 @@ var _interactions = require("./interactions");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -45,9 +47,10 @@ var Graph = function Graph(_ref) {
       enableZoomOut = _ref.enableZoomOut,
       enableDrag = _ref.enableDrag,
       hoverOpacity = _ref.hoverOpacity,
+      animateNodes = _ref.animateNodes,
       _ref$id = _ref.id,
       id = _ref$id === void 0 ? 'GraphTree_container' : _ref$id,
-      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "id"]);
+      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "animateNodes", "id"]);
 
   (0, _react.useEffect)(function () {
     if (!data) {
@@ -66,41 +69,46 @@ var Graph = function Graph(_ref) {
     .force("center", (0, _d3Force.forceCenter)(svg._groups[0][0].parentElement.clientWidth / 2, svg._groups[0][0].parentElement.clientHeight / 2)) // This force attracts nodes to the center of the svg area
     .on("tick", function () {
       return (0, _events.tick)(node, link);
-    }); // https://github.com/d3/d3-force#simulation_tick
-    // add interactions
+    }) // https://github.com/d3/d3-force#simulation_tick
+    .on("end", animateNodes ? null : function () {
+      node.each(function (d) {
+        d.fx = d.x;
+        d.fy = d.y;
+      });
+    }); // add interactions
 
     (0, _interactions.addZoom)(svg, zoomDepth, enableZoomOut);
     (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
     (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
-  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity]);
+  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes]);
 
   if (!data) {
     return null;
   }
 
-  return _react["default"].createElement("svg", _extends({
+  return /*#__PURE__*/_react.default.createElement("svg", _extends({
     id: id,
     width: "100%",
     height: "100%"
-  }, restProps), _react["default"].createElement("g", {
+  }, restProps), /*#__PURE__*/_react.default.createElement("g", {
     className: "_graphZoom"
   }, data.links.map(function (link, i) {
-    return LineComponent ? _react["default"].createElement(LineComponent, {
+    return LineComponent ? /*#__PURE__*/_react.default.createElement(LineComponent, {
       link: link,
       key: i,
       className: "_graphLine"
-    }) : _react["default"].createElement("line", {
+    }) : /*#__PURE__*/_react.default.createElement("line", {
       stroke: "grey",
       key: i,
       className: "_graphLine"
     });
   }), data.nodes.map(function (node, i) {
-    return _react["default"].createElement("g", {
+    return /*#__PURE__*/_react.default.createElement("g", {
       key: i,
       className: "_graphNode"
-    }, NodeComponent ? _react["default"].createElement(NodeComponent, {
+    }, NodeComponent ? /*#__PURE__*/_react.default.createElement(NodeComponent, {
       node: node
-    }) : _react["default"].createElement("circle", {
+    }) : /*#__PURE__*/_react.default.createElement("circle", {
       fill: "black",
       r: 10
     }));
@@ -111,7 +119,8 @@ Graph.defaultProps = {
   nodeDistance: 100,
   zoomDepth: 0,
   enableZoomOut: false,
-  hoverOpacity: 1
+  hoverOpacity: 1,
+  animateNodes: true
 };
 var _default = Graph;
-exports["default"] = _default;
+exports.default = _default;
