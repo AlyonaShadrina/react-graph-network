@@ -17,6 +17,14 @@ import { addDrag, addHoverOpacity, addZoom } from './interactions';
 // so better fork and/or use branch name in package.json dependencies like so:
 // "react-graph-network": "github:AlyonaShadrina/react-graph-network#<branch>"
 // dont't forget to `rm -rf ./node_modules/react-graph-network`, maybe clear your package.json and `npm i`
+const loaderStyle = {
+    width: "100%",
+    height: "100%",
+    background: "white",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+}
 
 const Graph = ({
     data,
@@ -29,6 +37,7 @@ const Graph = ({
     enableDrag,
     hoverOpacity,
     animateNodes,
+    LoaderComponent,
     id = 'GraphTree_container',
     ...restProps
 }) => {
@@ -41,6 +50,8 @@ const Graph = ({
         const svg = select(`#${id}`);
         const link = svg.selectAll("._graphLine").data(data.links);
         const node = svg.selectAll("._graphNode").data(data.nodes);
+        select("._loaderContainer").style("display", undefined);
+        select("._graphZoom").attr("transform", undefined);
 
         const simulation = forceSimulation(data.nodes)
             .force("link", forceLink()                                 // This force provides links between nodes
@@ -57,50 +68,50 @@ const Graph = ({
                 node.each(function(d) {
                     d.fx = d.x;
                     d.fy = d.y;
-                })
+                });
+                select("._loaderContainer").style("display", "none")
             })
-
 
         // add interactions
         addZoom(svg, zoomDepth, enableZoomOut);
         addHoverOpacity(node, link, hoverOpacity);
         addDrag(node, simulation, enableDrag, pullIn);
 
-    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes]);
+    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, LoaderComponent]);
 
     if (!data) {
         return null
     }
 
     return (
-        <svg
-            id={id}
-            width="100%"
-            height="100%"
-            {...restProps}
-        >
-             <g className="_graphZoom">
-                 {
-                     data.links.map((link, i) => {
-                         return LineComponent
-                             ? <LineComponent link={link} key={i} className="_graphLine"/>
-                             : <line stroke="grey" key={i} className="_graphLine" />
-                     })
-                 }
-                 {
-                     data.nodes.map((node, i) => {
-                         return (
-                             <g key={i} className="_graphNode">
-                                 {
-                                     NodeComponent
-                                         ? <NodeComponent node={node}/>
-                                         : <circle fill="black" r={10} />
-                                 }
-                             </g>
-                         )
-                     })
-                 }
-             </g>
+        <svg id={id} width="100%" height="100%" {...restProps}>
+            <g className="_graphZoom">
+                {
+                    data.links.map((link, i) => {
+                        return LineComponent
+                            ? <LineComponent link={link} key={i} className="_graphLine"/>
+                            : <line stroke="grey" key={i} className="_graphLine" />
+                    })
+                }
+                {
+                    data.nodes.map((node, i) => {
+                        return (
+                            <g key={i} className="_graphNode">
+                                {
+                                    NodeComponent
+                                        ? <NodeComponent node={node}/>
+                                        : <circle fill="black" r={10} />
+                                }
+                            </g>
+                        )
+                    })
+                }
+            </g>
+            {!animateNodes && (
+                <foreignObject className="_loaderContainer" width="100%" height="100%">
+                    {LoaderComponent ? <LoaderComponent /> : <div style={loaderStyle}>Plotting...</div> }
+                </foreignObject>
+            )}
         </svg>
     )
 };
