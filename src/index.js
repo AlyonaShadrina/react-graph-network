@@ -28,6 +28,7 @@ const Graph = ({
     enableZoomOut,
     enableDrag,
     hoverOpacity,
+    animateNodes,
     id = 'GraphTree_container',
     ...restProps
 }) => {
@@ -51,14 +52,21 @@ const Graph = ({
                 svg._groups[0][0].parentElement.clientWidth / 2,
                 svg._groups[0][0].parentElement.clientHeight / 2
             ))                                                         // This force attracts nodes to the center of the svg area
-            .on("tick", () => tick(node, link));                       // https://github.com/d3/d3-force#simulation_tick
+            .on("tick", () => tick(node, link))                        // https://github.com/d3/d3-force#simulation_tick
+            .on("end", animateNodes ? null : () => {
+                node.each(function(d) {
+                    d.fx = d.x;
+                    d.fy = d.y;
+                })
+            })
+
 
         // add interactions
         addZoom(svg, zoomDepth, enableZoomOut);
         addHoverOpacity(node, link, hoverOpacity);
         addDrag(node, simulation, enableDrag, pullIn);
 
-    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity]);
+    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes]);
 
     if (!data) {
         return null
@@ -102,6 +110,7 @@ Graph.defaultProps = {
     zoomDepth: 0,
     enableZoomOut: false,
     hoverOpacity: 1,
+    animateNodes: true,
 };
 
 export default Graph;
