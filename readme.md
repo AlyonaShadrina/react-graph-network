@@ -60,6 +60,8 @@ Try different preferences on [demo page](https://alyonashadrina.github.io/react-
 | `pullIn`         | `bool`   | `false` | When `enableDrag`, stretch nodes back. |
 | `zoomDepth`      | `number` | `0`     | Zooming on scroll wheel. `1` will just enable dragging graph area. |
 | `hoverOpacity`   | `number` | `1`     | When hover on node all other nodes will have this value as opacity. Needs to be from 0 to 1. |
+| `animateNodes`     | `bool`   | `true` | Default node animation upon render. |
+| `enableZoomOut`     | `bool`   | `false` | Enable zoom out. |
 
 #### `LineComponent`
 You need to apply all rest props on your `<line>` tag. If you have specific logic in your Line component be sure to handle link prop both as id and object. See [details and example on demo project](https://github.com/AlyonaShadrina/react-graph-network-demo#linecomponent-code).
