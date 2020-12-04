@@ -109,7 +109,7 @@ const Graph = ({
             </g>
             {!animateNodes && (
                 <foreignObject className="_loaderContainer" width="100%" height="100%">
-                    {LoaderComponent ? <LoaderComponent /> : <div style={loaderStyle}>Plotting...</div> }
+                    {LoaderComponent ? <LoaderComponent nodes={data.nodes} /> : <div style={loaderStyle}>Plotting...</div> }
                 </foreignObject>
             )}
         </svg>
