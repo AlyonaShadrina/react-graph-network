@@ -129,7 +129,9 @@ var Graph = function Graph(_ref) {
     className: "_loaderContainer",
     width: "100%",
     height: "100%"
-  }, LoaderComponent ? /*#__PURE__*/_react.default.createElement(LoaderComponent, null) : /*#__PURE__*/_react.default.createElement("div", {
+  }, LoaderComponent ? /*#__PURE__*/_react.default.createElement(LoaderComponent, {
+    nodes: data.nodes
+  }) : /*#__PURE__*/_react.default.createElement("div", {
     style: loaderStyle
   }, "Plotting...")));
 };
