@@ -1,6 +1,6 @@
 import { select } from "d3-selection";
-import { forceCenter, forceLink, forceManyBody, forceSimulation } from "d3-force";
-import React, { useEffect } from 'react';
+import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation } from "d3-force";
+import React, { useEffect, useRef } from 'react';
 
 import { tick } from './events';
 import { addDrag, addHoverOpacity, addZoom } from './interactions';
@@ -38,6 +38,8 @@ const Graph = ({
     hoverOpacity,
     animateNodes,
     LoaderComponent,
+    collisionRadius,
+    nodeRadius,
     id = 'GraphTree_container',
     ...restProps
 }) => {
@@ -53,6 +55,8 @@ const Graph = ({
         select("._loaderContainer").style("display", undefined);
         select("._graphZoom").attr("transform", undefined);
 
+        const collideRadius = collisionRadius < nodeRadius ? nodeRadius : collisionRadius
+
         const simulation = forceSimulation(data.nodes)
             .force("link", forceLink()                                 // This force provides links between nodes
                 .id(function(d) { return d.id; })                      // This provide the id of a node
@@ -63,21 +67,22 @@ const Graph = ({
                 svg._groups[0][0].parentElement.clientWidth / 2,
                 svg._groups[0][0].parentElement.clientHeight / 2
             ))                                                         // This force attracts nodes to the center of the svg area
+            .force("collide", forceCollide(collideRadius))
             .on("tick", () => tick(node, link))                        // https://github.com/d3/d3-force#simulation_tick
             .on("end", animateNodes ? null : () => {
-                node.each(function(d) {
-                    d.fx = d.x;
-                    d.fy = d.y;
-                });
-                select("._loaderContainer").style("display", "none")
-            })
+            node.each(function(d) {
+                d.fx = d.x;
+                d.fy = d.y;
+            });
+            select("._loaderContainer").style("display", "none")
+        })
 
         // add interactions
         addZoom(svg, zoomDepth, enableZoomOut);
         addHoverOpacity(node, link, hoverOpacity);
         addDrag(node, simulation, enableDrag, pullIn);
 
-    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, LoaderComponent]);
+    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, LoaderComponent, collisionRadius, nodeRadius]);
 
     if (!data) {
         return null
@@ -99,19 +104,19 @@ const Graph = ({
                             <g key={i} className="_graphNode">
                                 {
                                     NodeComponent
-                                        ? <NodeComponent node={node}/>
-                                        : <circle fill="black" r={10} />
+                                        ? <NodeComponent node={node} nodeRadius={nodeRadius}/>
+                                        : <circle fill="black" r={nodeRadius} />
                                 }
                             </g>
                         )
                     })
                 }
+                {!animateNodes && (
+                    <foreignObject className="_loaderContainer" width="100%" height="100%">
+                        {LoaderComponent ? <LoaderComponent nodes={data.nodes}/> : <div style={loaderStyle}>Plotting...</div> }
+                    </foreignObject>
+                )}
             </g>
-            {!animateNodes && (
-                <foreignObject className="_loaderContainer" width="100%" height="100%">
-                    {LoaderComponent ? <LoaderComponent nodes={data.nodes} /> : <div style={loaderStyle}>Plotting...</div> }
-                </foreignObject>
-            )}
         </svg>
     )
 };
@@ -122,6 +127,8 @@ Graph.defaultProps = {
     enableZoomOut: false,
     hoverOpacity: 1,
     animateNodes: true,
+    collisionRadius: 0,
+    nodeRadius: 10
 };
 
 export default Graph;
