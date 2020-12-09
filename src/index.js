@@ -37,10 +37,10 @@ const Graph = ({
     enableDrag,
     hoverOpacity,
     animateNodes,
-    LoaderComponent,
     collisionRadius,
     nodeRadius,
     id = 'GraphTree_container',
+    onEnd = () => {},
     ...restProps
 }) => {
     useEffect(() => {
@@ -52,10 +52,10 @@ const Graph = ({
         const svg = select(`#${id}`);
         const link = svg.selectAll("._graphLine").data(data.links);
         const node = svg.selectAll("._graphNode").data(data.nodes);
-        select("._loaderContainer").style("display", undefined);
         select("._graphZoom").attr("transform", undefined);
 
         const collideRadius = collisionRadius < nodeRadius ? nodeRadius : collisionRadius
+        console.log('local d3 synapse')
 
         const simulation = forceSimulation(data.nodes)
             .force("link", forceLink()                                 // This force provides links between nodes
@@ -70,19 +70,19 @@ const Graph = ({
             .force("collide", forceCollide(collideRadius))
             .on("tick", () => tick(node, link))                        // https://github.com/d3/d3-force#simulation_tick
             .on("end", animateNodes ? null : () => {
-            node.each(function(d) {
-                d.fx = d.x;
-                d.fy = d.y;
-            });
-            select("._loaderContainer").style("display", "none")
-        })
+                node.each(function(d) {
+                    d.fx = d.x;
+                    d.fy = d.y;
+                });
+                onEnd();
+            })
 
         // add interactions
         addZoom(svg, zoomDepth, enableZoomOut);
         addHoverOpacity(node, link, hoverOpacity);
         addDrag(node, simulation, enableDrag, pullIn);
 
-    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, LoaderComponent, collisionRadius, nodeRadius]);
+    }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, collisionRadius, nodeRadius]);
 
     if (!data) {
         return null
@@ -111,11 +111,6 @@ const Graph = ({
                         )
                     })
                 }
-                {!animateNodes && (
-                    <foreignObject className="_loaderContainer" width="100%" height="100%">
-                        {LoaderComponent ? <LoaderComponent nodes={data.nodes}/> : <div style={loaderStyle}>Plotting...</div> }
-                    </foreignObject>
-                )}
             </g>
         </svg>
     )
