@@ -1,11 +1,9 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _d3Selection = require("d3-selection");
 
@@ -19,7 +17,7 @@ var _interactions = require("./interactions");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -57,12 +55,13 @@ var Graph = function Graph(_ref) {
       enableDrag = _ref.enableDrag,
       hoverOpacity = _ref.hoverOpacity,
       animateNodes = _ref.animateNodes,
-      LoaderComponent = _ref.LoaderComponent,
       collisionRadius = _ref.collisionRadius,
       nodeRadius = _ref.nodeRadius,
       _ref$id = _ref.id,
       id = _ref$id === void 0 ? 'GraphTree_container' : _ref$id,
-      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "animateNodes", "LoaderComponent", "collisionRadius", "nodeRadius", "id"]);
+      _ref$onEnd = _ref.onEnd,
+      onEnd = _ref$onEnd === void 0 ? function () {} : _ref$onEnd,
+      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "animateNodes", "collisionRadius", "nodeRadius", "id", "onEnd"]);
 
   (0, _react.useEffect)(function () {
     if (!data) {
@@ -72,7 +71,6 @@ var Graph = function Graph(_ref) {
     var svg = (0, _d3Selection.select)("#".concat(id));
     var link = svg.selectAll("._graphLine").data(data.links);
     var node = svg.selectAll("._graphNode").data(data.nodes);
-    (0, _d3Selection.select)("._loaderContainer").style("display", undefined);
     (0, _d3Selection.select)("._graphZoom").attr("transform", undefined);
     var collideRadius = collisionRadius < nodeRadius ? nodeRadius : collisionRadius;
     var simulation = (0, _d3Force.forceSimulation)(data.nodes).force("link", (0, _d3Force.forceLink)() // This force provides links between nodes
@@ -90,54 +88,46 @@ var Graph = function Graph(_ref) {
         d.fx = d.x;
         d.fy = d.y;
       });
-      (0, _d3Selection.select)("._loaderContainer").style("display", "none");
+      onEnd();
     }); // add interactions
 
     (0, _interactions.addZoom)(svg, zoomDepth, enableZoomOut);
     (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
     (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
-  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, LoaderComponent, collisionRadius, nodeRadius]);
+  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, collisionRadius, nodeRadius]);
 
   if (!data) {
     return null;
   }
 
-  return /*#__PURE__*/_react.default.createElement("svg", _extends({
+  return _react["default"].createElement("svg", _extends({
     id: id,
     width: "100%",
     height: "100%"
-  }, restProps), /*#__PURE__*/_react.default.createElement("g", {
+  }, restProps), _react["default"].createElement("g", {
     className: "_graphZoom"
   }, data.links.map(function (link, i) {
-    return LineComponent ? /*#__PURE__*/_react.default.createElement(LineComponent, {
+    return LineComponent ? _react["default"].createElement(LineComponent, {
       link: link,
       key: i,
       className: "_graphLine"
-    }) : /*#__PURE__*/_react.default.createElement("line", {
+    }) : _react["default"].createElement("line", {
       stroke: "grey",
       key: i,
       className: "_graphLine"
     });
   }), data.nodes.map(function (node, i) {
-    return /*#__PURE__*/_react.default.createElement("g", {
+    return _react["default"].createElement("g", {
       key: i,
       className: "_graphNode"
-    }, NodeComponent ? /*#__PURE__*/_react.default.createElement(NodeComponent, {
+    }, NodeComponent ? _react["default"].createElement(NodeComponent, {
       node: node,
       nodeRadius: nodeRadius
-    }) : /*#__PURE__*/_react.default.createElement("circle", {
+    }) : _react["default"].createElement("circle", {
       fill: "black",
       r: nodeRadius
     }));
-  }), !animateNodes && /*#__PURE__*/_react.default.createElement("foreignObject", {
-    className: "_loaderContainer",
-    width: "100%",
-    height: "100%"
-  }, LoaderComponent ? /*#__PURE__*/_react.default.createElement(LoaderComponent, {
-    nodes: data.nodes
-  }) : /*#__PURE__*/_react.default.createElement("div", {
-    style: loaderStyle
-  }, "Plotting..."))));
+  })));
 };
 
 Graph.defaultProps = {
@@ -150,4 +140,4 @@ Graph.defaultProps = {
   nodeRadius: 10
 };
 var _default = Graph;
-exports.default = _default;
+exports["default"] = _default;
