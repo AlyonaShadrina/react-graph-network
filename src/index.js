@@ -55,7 +55,6 @@ const Graph = ({
         select("._graphZoom").attr("transform", undefined);
 
         const collideRadius = collisionRadius < nodeRadius ? nodeRadius : collisionRadius
-        console.log('local d3 synapse')
 
         const simulation = forceSimulation(data.nodes)
             .force("link", forceLink()                                 // This force provides links between nodes
