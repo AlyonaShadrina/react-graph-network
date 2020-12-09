@@ -35,6 +35,15 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 // so better fork and/or use branch name in package.json dependencies like so:
 // "react-graph-network": "github:AlyonaShadrina/react-graph-network#<branch>"
 // dont't forget to `rm -rf ./node_modules/react-graph-network`, maybe clear your package.json and `npm i`
+var loaderStyle = {
+  width: "100%",
+  height: "100%",
+  background: "white",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
 var Graph = function Graph(_ref) {
   var data = _ref.data,
       nodeDistance = _ref.nodeDistance,
@@ -42,11 +51,17 @@ var Graph = function Graph(_ref) {
       LineComponent = _ref.LineComponent,
       pullIn = _ref.pullIn,
       zoomDepth = _ref.zoomDepth,
+      enableZoomOut = _ref.enableZoomOut,
       enableDrag = _ref.enableDrag,
       hoverOpacity = _ref.hoverOpacity,
+      animateNodes = _ref.animateNodes,
+      collisionRadius = _ref.collisionRadius,
+      nodeRadius = _ref.nodeRadius,
       _ref$id = _ref.id,
       id = _ref$id === void 0 ? 'GraphTree_container' : _ref$id,
-      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableDrag", "hoverOpacity", "id"]);
+      _ref$onEnd = _ref.onEnd,
+      onEnd = _ref$onEnd === void 0 ? function () {} : _ref$onEnd,
+      restProps = _objectWithoutProperties(_ref, ["data", "nodeDistance", "NodeComponent", "LineComponent", "pullIn", "zoomDepth", "enableZoomOut", "enableDrag", "hoverOpacity", "animateNodes", "collisionRadius", "nodeRadius", "id", "onEnd"]);
 
   (0, _react.useEffect)(function () {
     if (!data) {
@@ -56,6 +71,8 @@ var Graph = function Graph(_ref) {
     var svg = (0, _d3Selection.select)("#".concat(id));
     var link = svg.selectAll("._graphLine").data(data.links);
     var node = svg.selectAll("._graphNode").data(data.nodes);
+    (0, _d3Selection.select)("._graphZoom").attr("transform", undefined);
+    var collideRadius = collisionRadius < nodeRadius ? nodeRadius : collisionRadius;
     var simulation = (0, _d3Force.forceSimulation)(data.nodes).force("link", (0, _d3Force.forceLink)() // This force provides links between nodes
     .id(function (d) {
       return d.id;
@@ -63,15 +80,21 @@ var Graph = function Graph(_ref) {
     .links(data.links) // and this the list of links
     ).force("charge", (0, _d3Force.forceManyBody)().strength(-1 * nodeDistance)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
     .force("center", (0, _d3Force.forceCenter)(svg._groups[0][0].parentElement.clientWidth / 2, svg._groups[0][0].parentElement.clientHeight / 2)) // This force attracts nodes to the center of the svg area
-    .on("tick", function () {
+    .force("collide", (0, _d3Force.forceCollide)(collideRadius)).on("tick", function () {
       return (0, _events.tick)(node, link);
-    }); // https://github.com/d3/d3-force#simulation_tick
-    // add interactions
+    }) // https://github.com/d3/d3-force#simulation_tick
+    .on("end", animateNodes ? null : function () {
+      node.each(function (d) {
+        d.fx = d.x;
+        d.fy = d.y;
+      });
+      onEnd();
+    }); // add interactions
 
-    (0, _interactions.addZoom)(svg, zoomDepth);
+    (0, _interactions.addZoom)(svg, zoomDepth, enableZoomOut);
     (0, _interactions.addHoverOpacity)(node, link, hoverOpacity);
     (0, _interactions.addDrag)(node, simulation, enableDrag, pullIn);
-  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableDrag, hoverOpacity]);
+  }, [data, nodeDistance, NodeComponent, LineComponent, pullIn, zoomDepth, enableZoomOut, enableDrag, hoverOpacity, animateNodes, collisionRadius, nodeRadius]);
 
   if (!data) {
     return null;
@@ -98,10 +121,11 @@ var Graph = function Graph(_ref) {
       key: i,
       className: "_graphNode"
     }, NodeComponent ? _react["default"].createElement(NodeComponent, {
-      node: node
+      node: node,
+      nodeRadius: nodeRadius
     }) : _react["default"].createElement("circle", {
       fill: "black",
-      r: 10
+      r: nodeRadius
     }));
   })));
 };
@@ -109,7 +133,11 @@ var Graph = function Graph(_ref) {
 Graph.defaultProps = {
   nodeDistance: 100,
   zoomDepth: 0,
-  hoverOpacity: 1
+  enableZoomOut: false,
+  hoverOpacity: 1,
+  animateNodes: true,
+  collisionRadius: 0,
+  nodeRadius: 10
 };
 var _default = Graph;
 exports["default"] = _default;

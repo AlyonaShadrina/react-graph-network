@@ -13,7 +13,7 @@ var _d3Zoom = require("d3-zoom");
 
 var _events = require("./events");
 
-var addZoom = function addZoom(svg, zoomDepth) {
+var addZoom = function addZoom(svg, zoomDepth, enableZoomOut) {
   if (zoomDepth) {
     var svgHeight = svg._groups[0][0].clientHeight;
     var svgWidth = svg._groups[0][0].clientWidth;
@@ -21,8 +21,9 @@ var addZoom = function addZoom(svg, zoomDepth) {
     var zoomed = function zoomed() {
       svg.selectAll("._graphZoom").attr("transform", _d3Selection.event.transform);
     };
+    var minZoomDepth = enableZoomOut ? 0 : 1;
 
-    svg.call((0, _d3Zoom.zoom)().extent([[0, 0], [svgWidth, svgHeight]]).scaleExtent([1, zoomDepth]).on("zoom", zoomed));
+    svg.call((0, _d3Zoom.zoom)().extent([[0, 0], [svgWidth, svgHeight]]).scaleExtent([minZoomDepth, zoomDepth]).on("zoom", zoomed));
   }
 
   return svg;

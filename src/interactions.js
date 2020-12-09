@@ -4,7 +4,7 @@ import { zoom } from 'd3-zoom';
 import { dragended, dragged, dragstarted, dragsubject } from './events';
 
 
-export const addZoom = (svg, zoomDepth) => {
+export const addZoom = (svg, zoomDepth, enableZoomOut) => {
     if (zoomDepth) {
         const svgHeight = svg._groups[0][0].clientHeight;
         const svgWidth = svg._groups[0][0].clientWidth;
@@ -12,10 +12,11 @@ export const addZoom = (svg, zoomDepth) => {
         const zoomed = () => {
             svg.selectAll("._graphZoom").attr("transform", event.transform);
         };
-
+        const minZoomDepth = enableZoomOut ? 0 : 1;
+        
         svg.call(zoom()
             .extent([[0, 0], [svgWidth, svgHeight]])
-            .scaleExtent([1, zoomDepth])
+            .scaleExtent([minZoomDepth, zoomDepth])
             .on("zoom", zoomed));
     }
     return svg;
